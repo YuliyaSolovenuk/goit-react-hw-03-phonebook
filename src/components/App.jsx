@@ -9,7 +9,7 @@ Notiflix.Notify.init({
   width: '320px',
   position: 'center-top',
   cssAnimationStyle: 'zoom',
-  closeButton: true,
+  // closeButton: true,
 });
 
 export class App extends Component {
@@ -22,6 +22,20 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const contactsStorage = JSON.parse(localStorage.getItem('contacts'));
+    if (contactsStorage) {
+      this.setState({ contacts: contactsStorage });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   handleChange = e => {
     const { name, value } = e.target;
@@ -65,7 +79,6 @@ export class App extends Component {
     return contacts.filter(contact => {
       return contact.name.toLowerCase().includes(filter.toLowerCase());
     });
-    
   };
 
   deleteContact = id => {
